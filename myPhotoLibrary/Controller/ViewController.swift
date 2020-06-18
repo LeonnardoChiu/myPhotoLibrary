@@ -65,7 +65,7 @@ class ViewController: UIViewController {
     
     func setupCollectionViewLayout() {
         
-        let itemSize = UIScreen.main.bounds.width/3 - 3
+        let itemSize = UIScreen.main.bounds.width/4 - 3
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 5, left: 0, bottom:  20, right: 0)
         layout.itemSize = CGSize(width: itemSize, height: itemSize)
@@ -132,7 +132,11 @@ class ViewController: UIViewController {
             var image = UIImage()
             
             option.isSynchronous = true
-//            option.deliveryMode = .highQualityFormat
+            /* FOR HIGH QUALITY PHOTOS
+
+            option.deliveryMode = .highQualityFormat
+             
+             */
             option.deliveryMode = .fastFormat
             
             manager.requestImage(for: asset, targetSize: CGSize(width: 500, height: 500), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
@@ -165,7 +169,6 @@ class ViewController: UIViewController {
                         self.imageArray.append(image)
                     }
                     
-                    
                     self.photoCollectionView.reloadData()
                     
                 }
@@ -177,15 +180,15 @@ class ViewController: UIViewController {
         newLibrary.creationDate = dateTemp
         newLibrary.photos = self.imageArray
         self.libraries.append(newLibrary)
-
+        
         self.imageArray.removeAll()
         
         DispatchQueue.main.async {
-//            self.photoCollectionView.reloadData()
+            //            self.photoCollectionView.reloadData()
             
             self.waitAlert.dismiss(animated: true, completion: nil)
         }
-
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
