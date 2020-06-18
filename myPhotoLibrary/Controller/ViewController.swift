@@ -65,14 +65,14 @@ class ViewController: UIViewController {
     
     func setupCollectionViewLayout() {
         
-        let itemSize = UIScreen.main.bounds.width/4 - 3
+        let itemSize = UIScreen.main.bounds.width/4 - 2
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 5, left: 0, bottom:  20, right: 0)
         layout.itemSize = CGSize(width: itemSize, height: itemSize)
         layout.headerReferenceSize = CGSize(width: UIScreen.main.bounds.width, height: 30)
         
-        layout.minimumInteritemSpacing = 3
-        layout.minimumLineSpacing = 3
+        layout.minimumInteritemSpacing = 2
+        layout.minimumLineSpacing = 2
         
         layout.sectionHeadersPinToVisibleBounds = true
         
@@ -91,8 +91,11 @@ class ViewController: UIViewController {
         else {
             
             if authPhotos == .authorized {
-                self.present(waitAlert, animated: true) {
-                    self.getImages()
+                DispatchQueue.main.async {
+                    
+                    self.present(self.waitAlert, animated: true) {
+                        self.getImages()
+                    }
                 }
             }
                 
@@ -107,13 +110,15 @@ class ViewController: UIViewController {
     }
     
     func getImages() {
+        let fetchOptions=PHFetchOptions()
+        fetchOptions.sortDescriptors=[NSSortDescriptor(key:"creationDate", ascending: false)]
         
-        let assets = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: nil)
+        let assets = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
         assets.enumerateObjects({ (object, count, stop) in
             self.arrayOfAsset.append(object)
         })
         
-        self.arrayOfAsset.reverse()
+//        self.arrayOfAsset.reverse()
         
         getAssetThumbnail(assets: arrayOfAsset)
     }
@@ -132,11 +137,7 @@ class ViewController: UIViewController {
             var image = UIImage()
             
             option.isSynchronous = true
-            /* FOR HIGH QUALITY PHOTOS
-
-            option.deliveryMode = .highQualityFormat
-             
-             */
+//            option.deliveryMode = .highQualityFormat
             option.deliveryMode = .fastFormat
             
             manager.requestImage(for: asset, targetSize: CGSize(width: 500, height: 500), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
